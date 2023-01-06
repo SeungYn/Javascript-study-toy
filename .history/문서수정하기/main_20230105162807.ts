@@ -1,0 +1,34 @@
+const tagBtns = document.querySelector('.btns')! as HTMLElement;
+const inputGroups = document.querySelector('.input-group')! as HTMLElement;
+const tagNameSpans = document.querySelectorAll(
+  '.input-group__span'
+)! as NodeListOf<HTMLElement>;
+const inputText = document.querySelector('.input-group__input')! as HTMLElement;
+const inputGroupBottom = document.querySelector(
+  '.input-group__bottom'
+)! as HTMLElement;
+console.log(inputGroupBottom);
+
+let clickedTag = null;
+
+tagBtns.addEventListener('click', (e: MouseEvent) => {
+  const target = e.target! as HTMLElement;
+  if (target.className !== 'btns__tag') return;
+  showInputGroup();
+  inputTagNameSet(target.textContent!);
+});
+
+inputGroupBottom?.addEventListener('click', (e: MouseEvent) => {});
+
+function showInputGroup() {
+  inputGroups.style.display = 'block';
+}
+
+function setClickedTag(tag: string) {
+  console.log(tag);
+}
+
+function inputTagNameSet(tagName: string) {
+  tagNameSpans[0].textContent = `<${tagName}>`;
+  tagNameSpans[1].textContent = `</${tagName}>`;
+}
