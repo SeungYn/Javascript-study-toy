@@ -111,17 +111,3 @@ function inputTagNameSet(tagName) {
     tagNameSpans[0].textContent = "<".concat(tagName, ">");
     tagNameSpans[1].textContent = "</".concat(tagName, ">");
 }
-showInputGroup();
-var a = { b: 1 };
-function t1(a) {
-    a.b += 1;
-    console.log(a);
-}
-function t2(a) {
-    a.b += 1;
-    console.log(a);
-}
-t1(a);
-setTimeout(function () {
-    t2(a);
-}, 2000);

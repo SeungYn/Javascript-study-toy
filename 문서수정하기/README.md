@@ -33,3 +33,19 @@ translate는 노드의 원래 좌표 기준으로 움직이기때문에 아무�
 좌표를 움직일때는 노드의 처음 좌표기준으로 움직임
 transform: scale(1.25) translate(30px, 40px) rotate(45deg); 공백으로 한줄에 여러개 등록가능
 코드 블록시 실행되고 가장 마지막으로 적용된 스타일이 등록되어서 여러개 등록하면 한개밖에 등록이 안됨
+
+body::-webkit-scrollbar {
+width: 8px; /_ 스크롤바의 너비 _/
+}
+
+body::-webkit-scrollbar-thumb {
+height: 30%; /_ 스크롤바의 길이 _/
+background: #217af4; /_ 스크롤바의 색상 _/
+
+    border-radius: 10px;
+
+}
+
+body::-webkit-scrollbar-track {
+background: rgba(33, 122, 244, .1); /_스크롤바 뒷 배경 색상_/
+}

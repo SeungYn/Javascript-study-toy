@@ -14,6 +14,13 @@ button {
   background: none;
   cursor: pointer;
 }
+h1,
+h2,
+h3,
+p,
+pre {
+  margin: 0;
+}
 
 html,
 body {
@@ -38,15 +45,19 @@ body {
   height: 100%;
   padding: 40px;
   display: flex;
-  align-items: center;
   flex-direction: column;
   justify-content: center;
+  overflow-y: auto;
 }
 
 .fibot {
   width: 100%;
   border-top: 3px solid rgb(166, 211, 155);
   border-bottom: 3px solid rgb(166, 211, 155);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 10px 0;
 }
 
@@ -56,7 +67,7 @@ body {
   background-color: rgb(166, 211, 155);
   border-radius: 20px;
   text-align: center;
-  margin: 0.2rem;
+  margin: 0.4rem 0rem;
   padding: 0.4rem 0;
   color: white;
   transition: top 1s;

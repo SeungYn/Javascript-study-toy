@@ -143,20 +143,3 @@ function inputTagNameSet(tagName: string) {
   tagNameSpans[0].textContent = `<${tagName}>`;
   tagNameSpans[1].textContent = `</${tagName}>`;
 }
-
-showInputGroup();
-
-const a = { b: 1 };
-function t1(a: { b: number }) {
-  a.b += 1;
-  console.log(a);
-}
-function t2(a: { b: number }) {
-  a.b += 1;
-  console.log(a);
-}
-
-t1(a);
-setTimeout(() => {
-  t2(a);
-}, 2000);
