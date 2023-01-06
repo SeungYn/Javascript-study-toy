@@ -3,40 +3,25 @@
   <head>
     <style>
       div.container {
-        max-width: 300px;
-        height: 200px;
-        min-height: 0; /* <------------- required */
-        display: flex;
-        flex-direction: column;
-      }
-
-      div.head {
-        background: gray;
-        flex: 0;
-      }
-
-      div.body {
-        background: silver;
-        flex: 1; /* <------------------- required */
-        overflow-y: auto; /* <---------- required */
+        width: 100px;
+        height: 100px;
+        background-color: green;
+        transition: transform 1s;
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <div class="head">Text in header...</div>
-      <div class="body">
-        Text in body... Text in body... Text in body... Text in body... Text in
-        body... Text in body... Text in body... Text in body... Text in body...
-        Text in body... Text in body... Text in body... Text in body... Text in
-        body... Text in body... Text in body... Text in body... Text in body...
-        Text in body... Text in body... Text in body... Text in body... Text in
-        body... Text in body... Text in body... Text in body... Text in body...
-        Text in body... Text in body... Text in body... Text in body... Text in
-        body... Text in body... Text in body... Text in body... Text in body...
-        Text in body... Text in body... Text in body... Text in body... Text in
-        body... Text in body... Text in body... Text in body... Text in body...
-      </div>
-    </div>
+    <div class="container" style="transition: transform 1s"></div>
   </body>
+  <script>
+    const a = document.querySelector('.container');
+    setTimeout(() => {
+      a.style.transform = 'translateX(100px)';
+    }, 2000);
+
+    setTimeout(() => {
+      console.log('이동');
+      a.style.transform = 'translateX(200px)';
+    }, 4000);
+  </script>
 </html>

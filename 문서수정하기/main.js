@@ -4,7 +4,7 @@ var tagNameSpans = document.querySelectorAll('.input-group__span');
 var inputText = document.querySelector('.input-group__input');
 var inputGroupBottom = document.querySelector('.input-group__bottom');
 var fibot = document.querySelector('.fibot');
-var clickedTag = 'd';
+var clickedTag = null;
 tagBtns.addEventListener('click', function (e) {
     var target = e.target;
     if (target.className !== 'btns__tag')
@@ -20,15 +20,58 @@ inputGroupBottom.addEventListener('click', function (e) {
         return;
     var moveName = (_a = target.textContent) === null || _a === void 0 ? void 0 : _a.trim();
     var tagNode = makeNode(clickedTag, inputText.value);
-    moveEffect(tagNode);
-    //
-    nodeAttachToFibot(tagNode, moveName);
-    //클릭시 크게 나타났다가 위치로 이동시켜야됨
+    var cloneNode = makeCloneNode(tagNode);
+    //1 단계 클릭시 생기게하기
+    attachToInputGroup(cloneNode);
+    var _b = cloneNode.getBoundingClientRect(), cTop = _b.top, cLeft = _b.left;
+    //2 단계 위로 조금 올라가기
+    setTimeout(function () { return fisrstStepMoveCloneNode(cloneNode, moveName); }, 1000);
+    setTimeout(function () { return secondStepMoveCloneNode(cloneNode, moveName, cTop, cLeft); }, 2000);
+    setTimeout(function () {
+        thridStepRemoveCloneNode(cloneNode);
+        nodeAttachToFibot(tagNode, moveName);
+    }, 3000);
 });
+function thridStepRemoveCloneNode(cloneNode) {
+    cloneNode.remove();
+}
+function secondStepMoveCloneNode(cloneNode, position, cTop, cLeft) {
+    var _a = fibot.getBoundingClientRect(), top = _a.top, left = _a.left, bottom = _a.bottom;
+    var 이동시킬X = cLeft - left;
+    var 이동시킬Y = 0;
+    if (position === 'before' ||
+        position === 'beforebegin' ||
+        position === 'prepend' ||
+        position === 'afterbegin') {
+        이동시킬Y = top - cTop;
+    }
+    else {
+        이동시킬Y = bottom - cTop;
+    }
+    cloneNode.style.transform = "translate(-".concat(이동시킬X, "px, ").concat(이동시킬Y, "px)");
+}
+function fisrstStepMoveCloneNode(cloneNode, position) {
+    if (position === 'prepend' ||
+        position === 'before' ||
+        position === 'beforebegin' ||
+        position === 'afterbegin') {
+        cloneNode.style.transform = 'translateY(-200px) scale(1.5)';
+    }
+    else {
+        cloneNode.style.transform = 'translateY(200px) scale(1.5)';
+    }
+}
+function attachToInputGroup(cloneNode) {
+    inputGroups.prepend(cloneNode);
+}
+function makeCloneNode(node) {
+    var cloneNode = node.cloneNode(true);
+    cloneNode.classList.add('input-group__shadow--effect');
+    return cloneNode;
+}
 function moveEffect(node) {
     var cloneNode = node.cloneNode(true);
     cloneNode.classList.add('input-group__shadow--effect');
-    cloneNode.style.top = "-100px";
     inputGroups.prepend(cloneNode);
 }
 function makeNode(tagName, text) {
@@ -69,3 +112,16 @@ function inputTagNameSet(tagName) {
     tagNameSpans[1].textContent = "</".concat(tagName, ">");
 }
 showInputGroup();
+var a = { b: 1 };
+function t1(a) {
+    a.b += 1;
+    console.log(a);
+}
+function t2(a) {
+    a.b += 1;
+    console.log(a);
+}
+t1(a);
+setTimeout(function () {
+    t2(a);
+}, 2000);

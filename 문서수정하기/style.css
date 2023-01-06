@@ -79,9 +79,11 @@ body {
 }
 
 .btns {
+  height: 50%;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  overflow-y: auto;
 }
 
 .btns__tag {
@@ -167,13 +169,12 @@ body {
   position: absolute;
   width: 50%;
   height: 40px;
-  margin-left: 50%;
-  transform: translateX(-50%);
+  left: 25%;
+  /* transform: translateX(-50%); */
   z-index: 111;
+  transition: transform 1s;
 }
 
 .input-group__shadow--effect:hover {
-  left: 10000;
-  width: 100px;
   background-color: black;
 }

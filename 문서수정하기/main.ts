@@ -11,7 +11,7 @@ const inputGroupBottom = document.querySelector(
 )! as HTMLElement;
 const fibot = document.querySelector('.fibot')! as HTMLElement;
 
-let clickedTag: string | null = 'd';
+let clickedTag: string | null = null;
 
 tagBtns.addEventListener('click', (e: MouseEvent) => {
   const target = e.target! as HTMLElement;
@@ -24,19 +24,81 @@ tagBtns.addEventListener('click', (e: MouseEvent) => {
 inputGroupBottom.addEventListener('click', (e: MouseEvent) => {
   const target = e.target! as HTMLElement;
   if (target.className.split(' ')[0] !== 'input-group__insert') return;
-  const moveName = target.textContent?.trim();
+  const moveName = target.textContent?.trim()! as string;
   const tagNode = makeNode(clickedTag as string, inputText.value);
-  moveEffect(tagNode);
+  const cloneNode = makeCloneNode(tagNode);
 
-  //
-  nodeAttachToFibot(tagNode, moveName! as string);
-  //클릭시 크게 나타났다가 위치로 이동시켜야됨
+  //1 단계 클릭시 생기게하기
+  attachToInputGroup(cloneNode);
+  const { top: cTop, left: cLeft } = cloneNode.getBoundingClientRect();
+
+  //2 단계 위로 조금 올라가기
+  setTimeout(() => fisrstStepMoveCloneNode(cloneNode, moveName), 1000);
+  setTimeout(
+    () => secondStepMoveCloneNode(cloneNode, moveName, cTop, cLeft),
+    2000
+  );
+  setTimeout(() => {
+    thridStepRemoveCloneNode(cloneNode);
+    nodeAttachToFibot(tagNode, moveName! as string);
+  }, 3000);
 });
+
+function thridStepRemoveCloneNode(cloneNode: HTMLElement) {
+  cloneNode.remove();
+}
+
+function secondStepMoveCloneNode(
+  cloneNode: HTMLElement,
+  position: string,
+  cTop: number,
+  cLeft: number
+) {
+  const { top, left, bottom } = fibot.getBoundingClientRect();
+
+  let 이동시킬X = cLeft - left;
+  let 이동시킬Y = 0;
+
+  if (
+    position === 'before' ||
+    position === 'beforebegin' ||
+    position === 'prepend' ||
+    position === 'afterbegin'
+  ) {
+    이동시킬Y = top - cTop;
+  } else {
+    이동시킬Y = bottom - cTop;
+  }
+  cloneNode.style.transform = `translate(-${이동시킬X}px, ${이동시킬Y}px)`;
+}
+
+function fisrstStepMoveCloneNode(cloneNode: HTMLElement, position: string) {
+  if (
+    position === 'prepend' ||
+    position === 'before' ||
+    position === 'beforebegin' ||
+    position === 'afterbegin'
+  ) {
+    cloneNode.style.transform = 'translateY(-200px) scale(1.5)';
+  } else {
+    cloneNode.style.transform = 'translateY(200px) scale(1.5)';
+  }
+}
+
+function attachToInputGroup(cloneNode: HTMLElement) {
+  inputGroups.prepend(cloneNode);
+}
+
+function makeCloneNode(node: HTMLElement) {
+  const cloneNode = node.cloneNode(true) as HTMLElement;
+  cloneNode.classList.add('input-group__shadow--effect');
+
+  return cloneNode;
+}
 
 function moveEffect(node: HTMLElement) {
   const cloneNode = node.cloneNode(true) as HTMLElement;
   cloneNode.classList.add('input-group__shadow--effect');
-  cloneNode.style.top = `-100px`;
   inputGroups.prepend(cloneNode);
 }
 
@@ -83,3 +145,18 @@ function inputTagNameSet(tagName: string) {
 }
 
 showInputGroup();
+
+const a = { b: 1 };
+function t1(a: { b: number }) {
+  a.b += 1;
+  console.log(a);
+}
+function t2(a: { b: number }) {
+  a.b += 1;
+  console.log(a);
+}
+
+t1(a);
+setTimeout(() => {
+  t2(a);
+}, 2000);
