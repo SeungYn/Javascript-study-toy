@@ -107,5 +107,5 @@ body {
 }
 
 .test:hover {
-  transform: rotateZ(180deg);
+  transform: rotateX(180deg);
 }
