@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+One&family=Source+Sans+Pro:wght@300;400&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Popins', sans-serif;
+}
+html {
+  overflow: scroll;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(#2b1055, #7597de);
+}
+
+section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+section img {
+  position: absolute;
+  width: 100%;
+
+  left: 0;
+  pointer-events: none;
+}
+
+section img#moon {
+  mix-blend-mode: screen;
+}
+
+section img#stars {
+  object-fit: cover;
+  height: 100%;
+}
+
+section img#mountains_behind {
+  bottom: 0;
+  top: initial;
+}
+
+section img#mountains_front {
+  bottom: 0;
+  top: initial;
+  z-index: 1000;
+}
+
+#text {
+  position: absolute;
+  color: #fff;
+  font-size: 8vw;
+  font-weight: 200;
+}
+
+#text span {
+  font-weight: 700;
+}
+
+#btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
