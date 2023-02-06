@@ -1,4 +1,7 @@
 (() => {
+  let yOffset = 0; // window.pageYOffset 대신 쓸 변수
+  let prevScrollHeight = 0; //현재 스크롤 위치 보다 이전에 위치한 스크롤 섹션들의 스크롤 높이값의 합
+  let currentScene = 0; //현재 활성화된 씬
   //4개의 스크롤 구간에 대한 객체배열
   const sceneInfo = [
     {
@@ -50,10 +53,23 @@
     console.log(sceneInfo);
   }
 
-  let yOffset = 0;
   function scrollLoop() {
-    console.log(window.pageYOffset);
-    console.log(yOffset);
+    prevScrollHeight = 0;
+    //currentScene 으로 현재 내가 보고있는 씬에서 이전의 씬들의 값을 구해줌 2번쨰 씬을 보고있으면 1번째 씬의 값이 할당됨
+    for (let i = 0; i < currentScene; i++) {
+      prevScrollHeight += sceneInfo[i].scrollHeight;
+      console.log(prevScrollHeight);
+    }
+
+    if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
+      currentScene++;
+    }
+
+    if (yOffset < prevScrollHeight) {
+      currentScene--;
+    }
+
+    console.log(currentScene);
   }
 
   window.addEventListener('resize', sceneInfo);
