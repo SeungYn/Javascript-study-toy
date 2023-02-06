@@ -50,7 +50,19 @@
         i
       ].objs.container.style.height = `${sceneInfo[i].scrollHeight}px`;
     }
-    console.log(sceneInfo);
+
+    //새로고침시 현재 스크롤 위치에 맞춰서 현재 씬을 반영함
+    //씬을 돌면서 height를 더하다가 현재 스크롤 지점이랑 같거나 커지는 지점에서 해당 씬을 넣음
+    yOffset = window.scrollY;
+    let totalScrollHeight = 0;
+    for (let i = 0; i < sceneInfo.length; i++) {
+      totalScrollHeight += sceneInfo[i].scrollHeight;
+      if (totalScrollHeight >= yOffset) {
+        currentScene = i;
+        break;
+      }
+    }
+    document.body.setAttribute('id', `show-scene-${currentScene}`);
   }
 
   function scrollLoop() {
@@ -63,20 +75,22 @@
 
     if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
       currentScene++;
+      document.body.setAttribute('id', `show-scene-${currentScene}`);
     }
 
     if (yOffset < prevScrollHeight) {
+      if (currentScene === 0) return; //브라우져가 바운스효과가 일어나면 yOffset이 마이너스가 될 수 있음 그걸 방지
       currentScene--;
+      document.body.setAttribute('id', `show-scene-${currentScene}`);
     }
-
-    console.log(currentScene);
   }
 
-  window.addEventListener('resize', sceneInfo);
   window.addEventListener('scroll', () => {
+    console.log('scroll');
     yOffset = window.pageYOffset;
     scrollLoop();
   });
 
-  setLayout();
+  window.addEventListener('load', setLayout);
+  window.addEventListener('resize', setLayout);
 })();
