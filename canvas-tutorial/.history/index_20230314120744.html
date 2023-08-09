@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="kr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style type="text/css">
+      #tutorial {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="tutorial" width="150" height="150"></canvas>
+  </body>
+
+  <script>
+    const canvas = document.getElementById('tutorial');
+    var ctx = canvas.getContext('2d');
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0); //시작 위치를 정함
+    ctx.lineTo(100, 75); // 두번쨰 점
+    ctx.lineTo(100, 25); // 세번째 점
+    ctx.fill(); // 점들을 이어서 그리기
+    let data;
+
+    (async function () {
+      const res = await fetch('/data.json');
+    })();
+    console.log(data);
+  </script>
+</html>

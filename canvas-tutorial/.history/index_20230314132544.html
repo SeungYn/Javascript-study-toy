@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="kr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style type="text/css"></style>
+  </head>
+  <body>
+    <canvas id="tutorial" width="400" height="200"></canvas>
+  </body>
+
+  <script>
+    const canvas = document.getElementById('tutorial');
+    var context = canvas.getContext('2d');
+    // var data = [20, 35, 30, 10, 15];
+
+    // // 그래프 스타일 정의
+    // var barWidth = 30;
+    // var barSpacing = 10;
+    // var barColor = '#00bfff';
+
+    // // 그래프 그리기
+    // context.beginPath();
+    // for (var i = 0; i < data.length; i++) {
+    //   var x = i * (barWidth + barSpacing);
+    //   var y = canvas.height - data[i];
+    //   if (i === 0) {
+    //     context.moveTo(x, y);
+    //   } else {
+    //     context.lineTo(x, y);
+    //   }
+    // }
+    // context.lineTo(canvas.width, canvas.height);
+    // context.lineTo(0, canvas.height);
+    // context.fillStyle = barColor;
+    // context.fill();
+
+    context.beginPath();
+    context.moveTo(20, 0);
+    context.lineTo(20, canvas.height);
+    context.lineWidth = 1;
+    context.stroke();
+
+    (async function () {
+      const res = await fetch('/data.json');
+      const json = await res.json();
+      data = json.response;
+
+      const MAX_BAR_VALUE = Math.max(
+        ...Object.entries(data).map((item) => item[1].value_bar)
+      );
+      const BAR_BLOCK = Math.floor(MAX_BAR_VALUE / 4);
+      const HEIGHT_BLOCK = Math.floor(canvas.height / 4);
+      //처음 라인
+      context.moveTo(20, 0);
+      context.lineTo(0, 0);
+      context.stroke();
+      context.rotate(); // 90도 회전시키기
+      context.font = '14px Arial'; // 14px 크기의 Arial 글꼴
+      context.fillText('텍스트를 90도 회전시킵니다.', 20, 20); // (0, 0) 위치에 텍스트 채우기
+      for (let i = 0; i < 4; i++) {
+        context.beginPath();
+        context.moveTo(20, (4 - i) * HEIGHT_BLOCK);
+        context.lineTo(0, (4 - i) * HEIGHT_BLOCK);
+        context.lineWidth = 2;
+        context.stroke();
+      }
+    })();
+  </script>
+</html>

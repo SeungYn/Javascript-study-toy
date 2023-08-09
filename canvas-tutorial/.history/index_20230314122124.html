@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="kr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style type="text/css">
+      #tutorial {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="tutorial" width="400" height="200"></canvas>
+  </body>
+
+  <script>
+    const canvas = document.getElementById('tutorial');
+    var ctx = canvas.getContext('2d');
+
+    let data;
+
+    (async function () {
+      const res = await fetch('/data.json');
+      const json = await res.json();
+      data = json.response;
+      console.log(data);
+      console.log(Object.entries(data).map((item) => item[1].value_bar));
+      console.log(
+        Math.max([
+          13111, 19143, 14798, 14456, 19116, 18098, 16243, 13100, 19429, 14923,
+          10127, 12583, 12310, 15764, 11060, 14857, 13995, 14773, 18347, 15970,
+          18577, 11704, 17241, 14450, 14970, 17906, 11233, 17306, 14577, 13199,
+          12707, 15064, 16300, 14605, 15210, 13578, 11298, 15686, 11485, 16848,
+          18670, 17165, 15053, 14998, 17739, 19212, 16757, 12864, 10178, 19425,
+          12455, 16945, 13734, 13894, 19367, 15492, 19082, 13117, 15744, 15609,
+          14747, 15331, 12292, 11454, 12972, 19279, 18371, 13317, 18504, 16196,
+          19701, 14836, 13074, 18335, 15022, 12043, 11144, 17518, 18643, 18318,
+          10746, 18806, 16209, 14273, 19193, 19661, 19574, 18963, 13083, 12868,
+          10836, 14255, 15437, 18426, 11387, 14312, 18700, 18053, 13460, 14829,
+        ])
+      );
+    })();
+  </script>
+</html>

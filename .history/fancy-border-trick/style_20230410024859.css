@@ -1,0 +1,38 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #000;
+}
+
+.container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 100px;
+}
+
+.container .box {
+  position: relative;
+  width: 300px;
+  height: 400px;
+  background: linear-gradient(
+    45deg,
+    #00f376 10%,
+    transparent 10%,
+    transparent 50%,
+    #00f376 50%,
+    #00f376 60%,
+    transparent 60%,
+    transparent 100%;
+  );
+}

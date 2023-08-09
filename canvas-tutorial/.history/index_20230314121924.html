@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="kr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style type="text/css">
+      #tutorial {
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="tutorial" width="400" height="200"></canvas>
+  </body>
+
+  <script>
+    const canvas = document.getElementById('tutorial');
+    var ctx = canvas.getContext('2d');
+
+    let data;
+
+    (async function () {
+      const res = await fetch('/data.json');
+      const json = await res.json();
+      data = json.response;
+      console.log(data);
+      console.log(Object.entries(data).map((item) => item[1]));
+      console.log(
+        Math.max(Object.entries(data).map((item) => item[1].value_bar))
+      );
+    })();
+  </script>
+</html>
