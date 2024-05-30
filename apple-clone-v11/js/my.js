@@ -17,8 +17,11 @@
         messageB: document.querySelector('#scroll-section-0 .main-message.b'),
         messageC: document.querySelector('#scroll-section-0 .main-message.c'),
         messageD: document.querySelector('#scroll-section-0 .main-message.d'),
-        pinB: document.querySelector('#scroll-section-2 .b .pin'),
-        pinC: document.querySelector('#scroll-section-2 .c .pin'),
+        canvas: document.querySelector('#video-canvas-0'),
+        context: document.querySelector('#video-canvas-0').getContext('2d'),
+        videoImages: [],
+        //pinB: document.querySelector('#scroll-section-2 .b .pin'),
+        //pinC: document.querySelector('#scroll-section-2 .c .pin'),
       },
       values: {
         // 변화될 css값들 start, end는 애니메이션 적용될 구간
@@ -38,6 +41,8 @@
         messageB_translateY_out: [0, -20, { start: 0.45, end: 0.5 }],
         messageC_translateY_out: [0, -20, { start: 0.65, end: 0.7 }],
         messageD_translateY_out: [0, -20, { start: 0.85, end: 0.9 }],
+        videoImageCount: 300,
+        imageSequence: [0, 299],
       },
     },
     {
@@ -96,6 +101,20 @@
       values: {},
     },
   ];
+
+  function setCanvasImages() {
+    let imgElem;
+
+    for (let i = 0; i < sceneInfo[0].values.videoImageCount; i++) {
+      imgElem = document.createElement('img');
+      imgElem.src = `./video/001/IMG_${6726 + i}.JPG`;
+      sceneInfo[0].objs.videoImages.push(imgElem);
+    }
+
+    console.log(sceneInfo[0].objs.videoImages);
+  }
+
+  setCanvasImages();
 
   function setLayout() {
     // 각 스크롤 섹션의 높이 세팅

@@ -26,6 +26,7 @@ p {
   top: 0;
   left: 0;
   width: 100%;
+  z-index: 10;
 }
 
 .local-nav {
@@ -178,6 +179,11 @@ body#show-scene-1 #scroll-section-1 .sticky-elem,
 body#show-scene-2 #scroll-section-2 .sticky-elem,
 body#show-scene-3 #scroll-section-3 .sticky-elem {
   display: block;
+}
+
+.sticky-elem-canvas {
+  top: 0;
+  background-color: #ccc;
 }
 
 @media (min-width: 1024px) {
