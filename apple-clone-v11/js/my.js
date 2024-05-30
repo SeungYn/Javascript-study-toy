@@ -193,6 +193,11 @@
     // 현재 씬만 애니메이션 되도록 해주는 함수
     switch (currentScene) {
       case 0:
+        let sequence = Math.round(
+          calcValues(values.imageSequence, currentYOffset)
+        );
+        objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+
         if (scrollRatio <= 0.22) {
           // Iin
           const messageA_opacity_in = calcValues(

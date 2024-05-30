@@ -183,7 +183,7 @@ body#show-scene-3 #scroll-section-3 .sticky-elem {
 
 .sticky-elem-canvas {
   top: 0;
-  background-color: #ccc;
+  /* background-color: #ccc; */
 }
 
 @media (min-width: 1024px) {
