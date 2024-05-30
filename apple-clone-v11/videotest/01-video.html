@@ -1,50 +1,71 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Document</title>
-	<style>
-		* {
-			margin: 0;
-			padding: 0;
-		}
-		body {
-			height: 500vh;
-		}
-		body.before-load {
-			overflow-y: hidden;
-		}
-		.sample-video {
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-		}
-	</style>
-</head>
-<body class="before-load">
-	<video class="sample-video" src="../video/sample-low.mp4" muted></video>
-	<!-- <video class="sample-video" src="../video/sample-high.mp4" muted></video> -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        height: 500vh;
+      }
+      body.before-load {
+        overflow-y: hidden;
+      }
+      .sample-video {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body class="before-load">
+    <!-- <video class="sample-video" src="../video/sample-low.mp4" muted></video> -->
+    <!-- 비디오 해상도가 고화질이여서 스크롤 이벤트를 하면 버벅임 -->
+    <video class="sample-video" src="../video/sample-high.mp4" muted></video>
 
-	<script>
-		const videoElem = document.querySelector('.sample-video');
-		let progress;
-		let currentFrame;
-		function init() {
-			document.body.classList.remove('before-load');
+    <script>
+      const videoElem = document.querySelector('.sample-video');
+      let videoDuration;
 
-			window.addEventListener('scroll', function () {
-				progress = pageYOffset / (document.body.offsetHeight - window.innerHeight);
-				console.log(progress);
-				if (progress < 0) progress = 0;
-				if (progress > 1) progress = 1;
+      videoElem.addEventListener('loadeddata', () => {
+        // 비디오가 플레이 준비 상태완료 이벤트
+        console.log('비디오 로드 완료');
+        videoDuration = videoElem.duration; // 비디오의 전체 재생 시간
+        init();
+      });
 
-				videoElem.currentTime = videoElem.duration * progress;
-			});
-		}
+      let progress;
+      let currentFrame;
+      function init() {
+        document.body.classList.remove('before-load');
 
-		window.addEventListener('load', init);
-	</script>
-</body>
+        window.addEventListener('scroll', function () {
+          // 현재 스크롤된 양 / 전체 스크롤을 할 수 있는 범위
+          //window.innerHeight를 안 뺴주면 끝까지 스크롤을 할 수 없기 때문 즉 현재 창을 제외하고 스크롤을 해줄 수 없기 때문
+          // 만약 30퍼센트 만큼 스크롤을 하면 비디오도 30퍼센트만큼 재생을 시켜줘야함
+          progress =
+            pageYOffset / (document.body.offsetHeight - window.innerHeight);
+          console.log(progress);
+
+          // 모바일 바운스로 범위 벗어나는 걸 대비
+          if (progress < 0) progress = 0;
+          if (progress > 1) progress = 1;
+
+          //
+          requestAnimationFrame(() => {
+            // 비디오 현재 재생시간 세팅 16 * 0.5 == 8초
+            videoElem.currentTime = videoElem.duration * progress;
+          });
+          //videoElem.currentTime = videoElem.duration * progress;
+        });
+      }
+
+      // window.addEventListener('load', init);
+    </script>
+  </body>
 </html>
