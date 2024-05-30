@@ -20,8 +20,12 @@
       },
       values: {
         // 변화될 css값들 start, end는 애니메이션 적용될 구간
-        messageA_opacity: [0, 1, { start: 0.1, end: 0.2 }],
-        messageB_opacity: [0, 1, { start: 0.3, end: 0.4 }],
+        messageA_opacity_in: [0, 1, { start: 0.1, end: 0.2 }],
+        //messageB_opacity_in: [0, 1, { start: 0.3, end: 0.4 }],
+        messageA_translateY_in: [20, 0, { start: 0.1, end: 0.2 }],
+
+        messageA_opacity_out: [1, 0, { start: 0.25, end: 0.3 }],
+        messageA_translateY_out: [0, -20, { start: 0.25, end: 0.3 }],
       },
     },
     {
@@ -117,15 +121,39 @@
     const objs = sceneInfo[currentScene].objs;
     const values = sceneInfo[currentScene].values;
     const currentYOffset = yOffset - prevScrollHeight;
+    const scrollHeight = sceneInfo[currentScene].scrollHeight; // 현재 씬의 높이
+    const scrollRatio = currentYOffset / scrollHeight; // currentYOffset / 현재 씬의 높이
 
     // 현재 씬만 애니메이션 되도록 해주는 함수
     switch (currentScene) {
       case 0:
-        let messageA_opacity_in = calcValues(
-          values.messageA_opacity,
+        const messageA_opacity_in = calcValues(
+          values.messageA_opacity_in,
           currentYOffset
         );
-        objs.messageA.style.opacity = messageA_opacity_in;
+        const messageA_opacity_out = calcValues(
+          values.messageA_opacity_out,
+          currentYOffset
+        );
+        const messageA_translate_in = calcValues(
+          values.messageA_translateY_in,
+          currentYOffset
+        );
+        const messageA_translate_out = calcValues(
+          values.messageA_translateY_out,
+          currentYOffset
+        );
+
+        if (scrollRatio <= 0.22) {
+          // Iin
+          objs.messageA.style.opacity = messageA_opacity_in;
+          objs.messageA.style.transform = `translateY(${messageA_translate_in}%)`;
+        } else {
+          // out
+          objs.messageA.style.opacity = messageA_opacity_out;
+          objs.messageA.style.transform = `translateY(${messageA_translate_out}%)`;
+        }
+
         break;
       case 1:
         break;
