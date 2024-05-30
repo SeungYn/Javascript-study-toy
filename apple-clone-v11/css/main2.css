@@ -37,6 +37,7 @@ p {
   top: 45px;
   left: 0;
   width: 100%;
+  z-index: 10;
 }
 
 .global-nav-links,
@@ -68,7 +69,7 @@ p {
 
 .scroll-section {
   padding-top: 50vh;
-  border: 2px solid red;
+  /* border: 2px solid red; */
 }
 
 #scroll-section-0 h1 {
@@ -183,7 +184,14 @@ body#show-scene-3 #scroll-section-3 .sticky-elem {
 
 .sticky-elem-canvas {
   top: 0;
+  height: 100%;
   /* background-color: #ccc; */
+}
+
+.sticky-elem-canvas canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
 }
 
 @media (min-width: 1024px) {

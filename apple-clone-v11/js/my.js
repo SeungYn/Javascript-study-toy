@@ -144,6 +144,12 @@
       }
     }
     document.body.setAttribute('id', `show-scene-${currentScene}`);
+    console.log('resize');
+    const heightRatio = window.innerHeight / 1080;
+    console.log('heightRation::: ', heightRatio);
+    // scale로 크기를 재설정 해주기 떄문에 위치 값을 지정해줘도 제대로 적용이 안됨
+    // 이를 해결하기 위해 5050 정렬을 사용
+    sceneInfo[0].objs.canvas.style.transform = `translate3d(-50%,-50%,0) scale(${heightRatio})`;
   }
 
   /**
