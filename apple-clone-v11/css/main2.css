@@ -98,6 +98,16 @@ p {
   margin-bottom: 0.5em;
 }
 
+#scroll-section-2 .b {
+  top: 10%;
+  left: 40%;
+}
+
+#scroll-section-2 .c {
+  top: 15%;
+  left: 45%;
+}
+
 #scroll-section-2 .main-message {
   font-size: 3.5rem;
 }
@@ -201,6 +211,14 @@ body#show-scene-3 #scroll-section-3 .sticky-elem {
 
   .mid-message {
     font-size: 4vw;
+  }
+  #scroll-section-2 .b {
+    top: 20%;
+    left: 53%;
+  }
+
+  #scroll-section-2 .c {
+    left: 55%;
   }
 
   .canvas-caption {

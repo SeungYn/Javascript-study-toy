@@ -60,10 +60,17 @@
   function setLayout() {
     // 각 스크롤 섹션의 높이 세팅
     for (let i = 0; i < sceneInfo.length; i++) {
-      sceneInfo[i].scrollHeight = sceneInfo[i].heightNum * window.innerHeight;
+      if (sceneInfo[i].type === 'sticky') {
+        // 스크롤 애니메이션이 필요한 씬의 크기를 늘려줌
+        sceneInfo[i].scrollHeight = sceneInfo[i].heightNum * window.innerHeight;
+      } else {
+        // 스크롤 애니메이션이 필요 없는 부분은 해당 content의 높이로 지정
+        sceneInfo[i].scrollHeight = objs.container.offsetHeight;
+      }
+
       sceneInfo[
         i
-      ].objs.container.style.height = `${sceneInfo[i].scrollHeight}px`;
+      ].objs.container.style.height = `${sceneInfo[i].scrollHeight}px`; //
     }
 
     //새로고침시 현재 스크롤 위치에 맞춰서 현재 씬을 반영함
@@ -127,29 +134,31 @@
     // 현재 씬만 애니메이션 되도록 해주는 함수
     switch (currentScene) {
       case 0:
-        const messageA_opacity_in = calcValues(
-          values.messageA_opacity_in,
-          currentYOffset
-        );
-        const messageA_opacity_out = calcValues(
-          values.messageA_opacity_out,
-          currentYOffset
-        );
-        const messageA_translate_in = calcValues(
-          values.messageA_translateY_in,
-          currentYOffset
-        );
-        const messageA_translate_out = calcValues(
-          values.messageA_translateY_out,
-          currentYOffset
-        );
-
         if (scrollRatio <= 0.22) {
           // Iin
+          const messageA_opacity_in = calcValues(
+            values.messageA_opacity_in,
+            currentYOffset
+          );
+          const messageA_translate_in = calcValues(
+            values.messageA_translateY_in,
+            currentYOffset
+          );
+
           objs.messageA.style.opacity = messageA_opacity_in;
           objs.messageA.style.transform = `translateY(${messageA_translate_in}%)`;
         } else {
           // out
+          const messageA_opacity_out = calcValues(
+            values.messageA_opacity_out,
+            currentYOffset
+          );
+
+          const messageA_translate_out = calcValues(
+            values.messageA_translateY_out,
+            currentYOffset
+          );
+
           objs.messageA.style.opacity = messageA_opacity_out;
           objs.messageA.style.transform = `translateY(${messageA_translate_out}%)`;
         }
