@@ -105,8 +105,19 @@
       objs: {
         container: document.querySelector('#scroll-section-3'),
         canvasCaption: document.querySelector('.canvas-caption'),
+        canvas: document.querySelector('.image-blend-canvas'),
+        context: document.querySelector('.image-blend-canvas').getContext('2d'),
+        imagesPath: [
+          './images/blend-image-1.jpg',
+          './images/blend-image-2.jpg',
+        ],
+        images: [],
       },
-      values: {},
+      values: {
+        // 브랜딩 세션의 흰 박스 스크롤 할 대 계산할 예정
+        rect1X: [0, 0, { start: 0, end: 0 }],
+        rect2X: [0, 0, { start: 0, end: 0 }],
+      },
     },
   ];
 
@@ -125,6 +136,12 @@
       imgElem2 = document.createElement('img');
       imgElem2.src = `./video/002/IMG_${7027 + i}.JPG`;
       sceneInfo[2].objs.videoImages.push(imgElem2);
+    }
+
+    for (let i = 0; i < sceneInfo[3].objs.imagesPath.length; i++) {
+      let imgElem3 = document.createElement('img');
+      imgElem3.src = sceneInfo[3].objs.imagesPath[i];
+      sceneInfo[3].objs.images.push(imgElem3);
     }
   }
 
@@ -423,6 +440,49 @@
 
       case 3:
         // console.log('3 play');
+        // 가로, 세로 모두 꽉 차게 하기 위해 여기서 세팅
+        const widthRatio = window.innerWidth / objs.canvas.width;
+        const heightRatio = window.innerHeight / objs.canvas.height;
+        let canvasScalRatio;
+
+        // 어느 비율에서든 꽉 차게 비율을 구함.
+        if (widthRatio <= heightRatio) {
+          // 캔버스보다 브라우저 창이 홀쭉한 경우
+          canvasScalRatio = heightRatio;
+        } else {
+          // 캔버스보다 브라우저 창이 납작한 경우
+          canvasScalRatio = widthRatio;
+        }
+        console.log(canvasScalRatio);
+        objs.canvas.style.transform = `scale(${canvasScalRatio})`;
+        objs.context.drawImage(objs.images[0], 0, 0);
+
+        // 캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
+        const recalculatedInnerWidth = window.innerWidth / canvasScalRatio;
+        const recalculatedInnerHeight = window.innerHeight / canvasScalRatio;
+
+        console.log(recalculatedInnerWidth, recalculatedInnerHeight);
+
+        const whiteRectWidth = recalculatedInnerWidth * 0.15;
+        values.rect1X[0] = (objs.canvas.width - recalculatedInnerWidth) / 2;
+        values.rect1X[1] = values.rect1X[0] - whiteRectWidth;
+        values.rect2X[0] =
+          values.rect1X[0] + recalculatedInnerWidth - whiteRectWidth;
+        values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
+
+        // 좌우 휜색 박스 그리기 (x,y, width, height)
+        objs.context.fillRect(
+          values.rect1X[0],
+          0,
+          parseInt(whiteRectWidth),
+          recalculatedInnerHeight
+        );
+        objs.context.fillRect(
+          values.rect2X[0],
+          0,
+          parseInt(whiteRectWidth),
+          recalculatedInnerHeight
+        );
         break;
     }
   }
@@ -433,7 +493,7 @@
     //currentScene 으로 현재 내가 보고있는 씬에서 이전의 씬들의 값을 구해줌 2번쨰 씬을 보고있으면 1번째 씬의 값이 할당됨
     for (let i = 0; i < currentScene; i++) {
       prevScrollHeight += sceneInfo[i].scrollHeight;
-      console.log(prevScrollHeight);
+      //console.log(prevScrollHeight);
     }
 
     if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
