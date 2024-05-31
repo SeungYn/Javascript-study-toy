@@ -490,6 +490,7 @@
       case 3:
         // console.log('3 play');
         // 가로, 세로 모두 꽉 차게 하기 위해 여기서 세팅
+        let step = 0; // 현재 스크롤 단계
         const widthRatio = window.innerWidth / objs.canvas.width;
         const heightRatio = window.innerHeight / objs.canvas.height;
         let canvasScalRatio;
@@ -567,6 +568,20 @@
           parseInt(whiteRectWidth),
           recalculatedInnerHeight
         );
+
+        if (scrollRatio < values.rect1X[2].end) {
+          // 캔버스가 브라우저 상단에 닿지 않았을 때
+          step = 1;
+          objs.canvas.classList.remove('sticky');
+        } else {
+          // 캔버스가 브라우저 상단에 닿았을 때
+          step = 2;
+          // 이미지 블렌드
+          objs.canvas.classList.add('sticky'); // 포지션을 fixd로 변경
+          objs.canvas.style.top = `${
+            -(objs.canvas.height - objs.canvas.height * canvasScalRatio) / 2
+          }px`;
+        }
         break;
     }
   }

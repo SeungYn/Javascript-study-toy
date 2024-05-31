@@ -199,9 +199,15 @@ body#show-scene-3 #scroll-section-3 .sticky-elem {
   left: 50%;
 }
 
-.image-blend-canvas {
+.image-blend-canvas.sticky-elem {
   /* border: 3px solid red; */
   /* background-color: blue; */
+  top: 0;
+}
+
+.image-blend-canvas.sticky {
+  position: fixed;
+  top: 0;
 }
 
 #scroll-section-3 {
