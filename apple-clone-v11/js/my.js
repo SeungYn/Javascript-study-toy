@@ -117,6 +117,7 @@
         // 브랜딩 세션의 흰 박스 스크롤 할 대 계산할 예정
         rect1X: [0, 0, { start: 0, end: 0 }],
         rect2X: [0, 0, { start: 0, end: 0 }],
+        rectStartY: 0,
       },
     },
   ];
@@ -455,13 +456,33 @@
         }
         console.log(canvasScalRatio);
         objs.canvas.style.transform = `scale(${canvasScalRatio})`;
+        objs.context.fillStyle = 'white';
         objs.context.drawImage(objs.images[0], 0, 0);
 
         // 캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
-        const recalculatedInnerWidth = window.innerWidth / canvasScalRatio;
+        const recalculatedInnerWidth =
+          document.body.offsetWidth / canvasScalRatio; // innerWidth는 스크롤바 크기까지 포함시킴 window.innerWidth / canvasScalRatio;
         const recalculatedInnerHeight = window.innerHeight / canvasScalRatio;
 
-        console.log(recalculatedInnerWidth, recalculatedInnerHeight);
+        if (!values.rectStartY) {
+          // 스크롤 이벤트가 발생한나 순간 값을 가져옴, 속도에 따라 값이 변함
+          //values.rectStartY = objs.canvas.getBoundingClientRect().top;
+          // 위의 문제를 해결하기 위해 offSetTop를 사용
+          // 왼쪽 값에 빨간거 높이에서 연두색 높이를 빼고 나누기 2를 해주면됨
+          values.rectStartY =
+            objs.canvas.offsetTop +
+            (objs.canvas.height - objs.canvas.height * canvasScalRatio) / 2;
+
+          console.log(
+            'offsetTop',
+            window.innerHeight / 2 / scrollHeight,
+            window.innerHeight
+          );
+          values.rect1X[2].start = window.innerHeight / 2 / scrollHeight;
+          values.rect2X[2].start = window.innerHeight / 2 / scrollHeight;
+          values.rect1X[2].end = values.rectStartY / scrollHeight;
+          values.rect2X[2].end = values.rectStartY / scrollHeight;
+        }
 
         const whiteRectWidth = recalculatedInnerWidth * 0.15;
         values.rect1X[0] = (objs.canvas.width - recalculatedInnerWidth) / 2;
@@ -471,14 +492,29 @@
         values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
 
         // 좌우 휜색 박스 그리기 (x,y, width, height)
+        // objs.context.fillRect(
+        //   values.rect1X[0],
+        //   0,
+        //   parseInt(whiteRectWidth),
+        //   recalculatedInnerHeight
+        // );
+        // objs.context.fillRect(
+        //   values.rect2X[0],
+        //   0,
+        //   parseInt(whiteRectWidth),
+        //   recalculatedInnerHeight
+        // );
+
+        // 좌우 박스 애니메이션 적용
+
         objs.context.fillRect(
-          values.rect1X[0],
+          parseInt(calcValues(values.rect1X, currentYOffset)),
           0,
           parseInt(whiteRectWidth),
           recalculatedInnerHeight
         );
         objs.context.fillRect(
-          values.rect2X[0],
+          parseInt(calcValues(values.rect2X, currentYOffset)),
           0,
           parseInt(whiteRectWidth),
           recalculatedInnerHeight

@@ -69,6 +69,7 @@ p {
 
 .scroll-section {
   padding-top: 50vh;
+  position: relative;
   /* border: 2px solid red; */
 }
 
@@ -147,7 +148,7 @@ p {
 .mid-message {
   font-size: 2rem;
   color: #888;
-  padding: 0 1rem;
+  padding: 30vh 1rem;
   max-width: 1000px;
   margin: 0 auto;
 }
