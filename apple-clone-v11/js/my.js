@@ -618,6 +618,19 @@
               values.canvas_scale,
               currentYOffset
             )})`;
+            // 스크롤이 다시 올라갈 때 마진을 없애줘야함
+            objs.canvas.style.marginTop = 0;
+          }
+
+          if (
+            values.canvas_scale[2].end > 0 &&
+            scrollRatio > values.canvas_scale[2].end
+          ) {
+            // 블랜드 이미지가 fixed일 때 스크롤 된 길이 만큼 마진으로 해줘야함
+            // fixed를 풀어주면 그만큼 위로 위치가 올라가기 때문
+            // 근데 0.4배를 해주면됨 블랜드 이미지가 스크롤 이벤트가 실행된 기간은 0.4, 40퍼센트이기 때문
+            objs.canvas.classList.remove('sticky');
+            objs.canvas.style.marginTop = `${scrollHeight * 0.4}px`;
           }
         }
         break;
