@@ -118,6 +118,7 @@
         rect1X: [0, 0, { start: 0, end: 0 }],
         rect2X: [0, 0, { start: 0, end: 0 }],
         blendHeight: [0, 0, { start: 0, end: 0 }],
+        canvas_scale: [0, 0, { start: 0, end: 0 }],
         rectStartY: 0,
       },
     },
@@ -587,7 +588,7 @@
           values.blendHeight[2].end = values.blendHeight[2].start + 0.2; // 스크롤 끝나는 기간을 정함
 
           const blendHeight = calcValues(values.blendHeight, currentYOffset);
-          console.log(values.blendHeight, blendHeight);
+          //console.log(values.blendHeight, blendHeight);
           objs.context.drawImage(
             objs.images[1],
             0,
@@ -604,6 +605,20 @@
           objs.canvas.style.top = `${
             -(objs.canvas.height - objs.canvas.height * canvasScalRatio) / 2
           }px`;
+
+          // 블랜드 이미지 축소 애니메이션 시작
+          if (scrollRatio > values.blendHeight[2].end) {
+            values.canvas_scale[0] = canvasScalRatio; // 블랜드 이미지 축소 애니메이션 초기값
+            values.canvas_scale[1] =
+              document.body.offsetWidth / (1.5 * objs.canvas.width); // 블랜드 이미지 축소 애니메이션 끝값
+            values.canvas_scale[2].start = values.blendHeight[2].end; // 애니메이션 시작 위치
+            values.canvas_scale[2].end = values.canvas_scale[2].start + 0.2; // 애니메이션 시작 위치
+            console.log(calcValues(values.canvas_scale, currentYOffset));
+            objs.canvas.style.transform = `scale(${calcValues(
+              values.canvas_scale,
+              currentYOffset
+            )})`;
+          }
         }
         break;
     }
