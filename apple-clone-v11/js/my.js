@@ -119,6 +119,8 @@
         rect2X: [0, 0, { start: 0, end: 0 }],
         blendHeight: [0, 0, { start: 0, end: 0 }],
         canvas_scale: [0, 0, { start: 0, end: 0 }],
+        canvasCaption_opacity: [0, 1, { start: 0, end: 0 }],
+        canvasCaption_translateY: [20, 0, { start: 0, end: 0 }],
         rectStartY: 0,
       },
     },
@@ -631,6 +633,24 @@
             // 근데 0.4배를 해주면됨 블랜드 이미지가 스크롤 이벤트가 실행된 기간은 0.4, 40퍼센트이기 때문
             objs.canvas.classList.remove('sticky');
             objs.canvas.style.marginTop = `${scrollHeight * 0.4}px`;
+
+            // caption
+            values.canvasCaption_opacity[2].start = values.canvas_scale[2].end;
+            values.canvasCaption_opacity[2].end =
+              values.canvasCaption_opacity[2].start + 0.1;
+            values.canvasCaption_translateY[2].start =
+              values.canvas_scale[2].end;
+            values.canvasCaption_translateY[2].end =
+              values.canvasCaption_opacity[2].start + 0.1;
+
+            objs.canvasCaption.style.opacity = calcValues(
+              values.canvasCaption_opacity,
+              currentYOffset
+            );
+            objs.canvasCaption.style.transform = `translate3d(0, ${calcValues(
+              values.canvasCaption_translateY,
+              currentYOffset
+            )}%, 0)`;
           }
         }
         break;
