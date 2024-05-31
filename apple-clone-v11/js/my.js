@@ -152,6 +152,15 @@
 
   setCanvasImages();
 
+  function checkMenu() {
+    // 문서 전체 스크롤 위치
+    if (yOffset > 44) {
+      document.body.classList.add('local-nav-sticky');
+    } else {
+      document.body.classList.remove('local-nav-sticky');
+    }
+  }
+
   function setLayout() {
     // 각 스크롤 섹션의 높이 세팅
     for (let i = 0; i < sceneInfo.length; i++) {
@@ -687,6 +696,7 @@
     //console.log('scroll');
     yOffset = window.pageYOffset;
     scrollLoop();
+    checkMenu();
   });
 
   window.addEventListener('load', () => {
