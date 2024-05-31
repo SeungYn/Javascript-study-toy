@@ -117,6 +117,7 @@
         // 브랜딩 세션의 흰 박스 스크롤 할 대 계산할 예정
         rect1X: [0, 0, { start: 0, end: 0 }],
         rect2X: [0, 0, { start: 0, end: 0 }],
+        blendHeight: [0, 0, { start: 0, end: 0 }],
         rectStartY: 0,
       },
     },
@@ -204,6 +205,7 @@
         currentYOffset >= partScrollStart &&
         currentYOffset <= partScrollEnd
       ) {
+        // 현재 씬에서 스크롤 된 곳의 비율 만큼 값을 만들어줌, 즉 시작, 끝 값이 지정된 스크롤 위치에서 값으로 매핑
         rv =
           ((currentYOffset - partScrollStart) / partScrollHeight) *
             (values[1] - values[0]) +
@@ -577,6 +579,27 @@
           // 캔버스가 브라우저 상단에 닿았을 때
           step = 2;
           // 이미지 블렌드
+          // imageBlendY: [0, 0, {start:y, end:0}]
+          // 이미지의 width, height를 안 넣어주면 원래 이미지 크기로 그림
+          values.blendHeight[0] = 0;
+          values.blendHeight[1] = objs.canvas.height;
+          values.blendHeight[2].start = values.rect1X[2].end;
+          values.blendHeight[2].end = values.blendHeight[2].start + 0.2; // 스크롤 끝나는 기간을 정함
+
+          const blendHeight = calcValues(values.blendHeight, currentYOffset);
+          console.log(values.blendHeight, blendHeight);
+          objs.context.drawImage(
+            objs.images[1],
+            0,
+            objs.canvas.height - blendHeight,
+            objs.canvas.width,
+            blendHeight,
+            0,
+            objs.canvas.height - blendHeight,
+            objs.canvas.width,
+            blendHeight
+          );
+
           objs.canvas.classList.add('sticky'); // 포지션을 fixd로 변경
           objs.canvas.style.top = `${
             -(objs.canvas.height - objs.canvas.height * canvasScalRatio) / 2
