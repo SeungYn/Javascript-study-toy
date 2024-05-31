@@ -437,6 +437,54 @@
           )})`;
         }
 
+        // 3번 캔버스를 미리 그려줌
+        // let, const는 중괄호 기준 스코프 범위를 지정함
+        if (scrollRatio > 0.95) {
+          // 가로, 세로 모두 꽉 차게 하기 위해 여기서 세팅
+          const objs = sceneInfo[3].objs;
+          const widthRatio = window.innerWidth / objs.canvas.width;
+          const heightRatio = window.innerHeight / objs.canvas.height;
+          let canvasScalRatio;
+
+          // 어느 비율에서든 꽉 차게 비율을 구함.
+          if (widthRatio <= heightRatio) {
+            // 캔버스보다 브라우저 창이 홀쭉한 경우
+            canvasScalRatio = heightRatio;
+          } else {
+            // 캔버스보다 브라우저 창이 납작한 경우
+            canvasScalRatio = widthRatio;
+          }
+          console.log(canvasScalRatio);
+          objs.canvas.style.transform = `scale(${canvasScalRatio})`;
+          objs.context.fillStyle = 'white';
+          objs.context.drawImage(objs.images[0], 0, 0);
+
+          // 캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
+          const recalculatedInnerWidth =
+            document.body.offsetWidth / canvasScalRatio; // innerWidth는 스크롤바 크기까지 포함시킴 window.innerWidth / canvasScalRatio;
+          const recalculatedInnerHeight = window.innerHeight / canvasScalRatio;
+
+          const whiteRectWidth = recalculatedInnerWidth * 0.15;
+          values.rect1X[0] = (objs.canvas.width - recalculatedInnerWidth) / 2;
+          values.rect1X[1] = values.rect1X[0] - whiteRectWidth;
+          values.rect2X[0] =
+            values.rect1X[0] + recalculatedInnerWidth - whiteRectWidth;
+          values.rect2X[1] = values.rect2X[0] + whiteRectWidth;
+
+          // 좌우 휜색 박스 그리기 (x,y, width, height)
+          objs.context.fillRect(
+            values.rect1X[0],
+            0,
+            parseInt(whiteRectWidth),
+            recalculatedInnerHeight
+          );
+          objs.context.fillRect(
+            values.rect2X[0],
+            0,
+            parseInt(whiteRectWidth),
+            recalculatedInnerHeight
+          );
+        }
         break;
 
       case 3:
