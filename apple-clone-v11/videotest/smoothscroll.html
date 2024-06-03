@@ -1,55 +1,58 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>부드러운 스크롤</title>
-	<style>
-		body {
-			height: 500vh;
-		}
-		.box {
-			position: fixed;
-			top: 100px;
-			left: 0;
-			width: 0;
-			height: 100px;
-			background: orange;
-		}
-	</style>
-</head>
-<body>
-	<div class="box"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>부드러운 스크롤</title>
+    <style>
+      body {
+        height: 500vh;
+      }
+      .box {
+        position: fixed;
+        top: 100px;
+        left: 0;
+        width: 0;
+        height: 100px;
+        background: orange;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box"></div>
 
-	<script>
-		const box = document.querySelector('.box');
-		let acc = 0.1;
-		let delayedYOffset = 0;
-		let rafId;
-		let rafState;
+    <script>
+      const box = document.querySelector('.box');
+      let acc = 0.1;
+      let delayedYOffset = 0;
+      let rafId;
+      let rafState;
 
-		window.addEventListener('scroll', () => {
-			// box.style.width = `${window.pageYOffset}px`;
-			if (!rafState) {
-				rafId = requestAnimationFrame(loop);
-				rafState = true;
-			}
-		});
+      window.addEventListener('scroll', () => {
+        // box.style.width = `${window.pageYOffset}px`;
+        if (!rafState) {
+          rafId = requestAnimationFrame(loop);
+          rafState = true;
+        }
+      });
 
-		function loop() {
-			delayedYOffset = delayedYOffset + (pageYOffset - delayedYOffset) * acc;
-			box.style.width = `${delayedYOffset}px`;
-			console.log('loop');
+      function loop() {
+        // 속도 감속처리 식
+        delayedYOffset = delayedYOffset + (pageYOffset - delayedYOffset) * acc;
+        box.style.width = `${delayedYOffset}px`;
+        console.log('loop', pageYOffset);
 
-			rafId = requestAnimationFrame(loop);
+        rafId = requestAnimationFrame(loop);
 
-			if (Math.abs(pageYOffset - delayedYOffset) < 1) {
-				cancelAnimationFrame(rafId);
-				rafState = false;
-			}
-		}
+        // 무한 호출을 멈추기 위한 과정
+        // abs는 스크롤을 위로할 때 대비
+        if (Math.abs(pageYOffset - delayedYOffset) < 1) {
+          cancelAnimationFrame(rafId);
+          rafState = false;
+        }
+      }
 
-		loop();
-	</script>
-</body>
+      loop();
+    </script>
+  </body>
 </html>

@@ -4,6 +4,12 @@
   let currentScene = 0; //현재 활성화된 씬
   let enterNewScene = false; // 새로운 씬이 시작된 순간
 
+  // 스크롤 감속 처리 변수들
+  let acc = 0.1;
+  let delayedYOffset = 0;
+  let rafId;
+  let rafState;
+
   //4개의 스크롤 구간에 대한 객체배열
   const sceneInfo = [
     {
@@ -244,10 +250,10 @@
     // 현재 씬만 애니메이션 되도록 해주는 함수
     switch (currentScene) {
       case 0:
-        let sequence = Math.round(
-          calcValues(values.imageSequence, currentYOffset)
-        );
-        objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+        // let sequence = Math.round(
+        //   calcValues(values.imageSequence, currentYOffset)
+        // );
+        // objs.context.drawImage(objs.videoImages[sequence], 0, 0);
         objs.canvas.style.opacity = calcValues(
           values.canvas_opacity,
           currentYOffset
@@ -352,10 +358,11 @@
 
       case 2:
         // console.log('2 play');
-        let sequence2 = Math.round(
-          calcValues(values.imageSequence, currentYOffset)
-        );
-        objs.context.drawImage(objs.videoImages[sequence2], 0, 0);
+        // requestAnimationFrame를 활용해서 할 거라 주석처리
+        // let sequence2 = Math.round(
+        //   calcValues(values.imageSequence, currentYOffset)
+        // );
+        // objs.context.drawImage(objs.videoImages[sequence2], 0, 0);
 
         if (scrollRatio <= 0.5) {
           objs.canvas.style.opacity = calcValues(
@@ -456,6 +463,7 @@
         if (scrollRatio > 0.95) {
           // 가로, 세로 모두 꽉 차게 하기 위해 여기서 세팅
           const objs = sceneInfo[3].objs;
+          const values = sceneInfo[3].values;
           const widthRatio = window.innerWidth / objs.canvas.width;
           const heightRatio = window.innerHeight / objs.canvas.height;
           let canvasScalRatio;
@@ -468,7 +476,7 @@
             // 캔버스보다 브라우저 창이 납작한 경우
             canvasScalRatio = widthRatio;
           }
-          console.log(canvasScalRatio);
+
           objs.canvas.style.transform = `scale(${canvasScalRatio})`;
           objs.context.fillStyle = 'white';
           objs.context.drawImage(objs.images[0], 0, 0);
@@ -477,7 +485,7 @@
           const recalculatedInnerWidth =
             document.body.offsetWidth / canvasScalRatio; // innerWidth는 스크롤바 크기까지 포함시킴 window.innerWidth / canvasScalRatio;
           const recalculatedInnerHeight = window.innerHeight / canvasScalRatio;
-
+          console.log(values);
           const whiteRectWidth = recalculatedInnerWidth * 0.15;
           values.rect1X[0] = (objs.canvas.width - recalculatedInnerWidth) / 2;
           values.rect1X[1] = values.rect1X[0] - whiteRectWidth;
@@ -668,20 +676,24 @@
 
   function scrollLoop() {
     enterNewScene = false;
-    prevScrollHeight = 0;
-    //currentScene 으로 현재 내가 보고있는 씬에서 이전의 씬들의 값을 구해줌 2번쨰 씬을 보고있으면 1번째 씬의 값이 할당됨
+    prevScrollHeight = 0; //currentScene 으로 현재 내가 보고있는 씬에서 이전의 씬들의 값을 구해줌 2번쨰 씬을 보고있으면 1번째 씬의 값이 할당됨
     for (let i = 0; i < currentScene; i++) {
       prevScrollHeight += sceneInfo[i].scrollHeight;
       //console.log(prevScrollHeight);
     }
 
-    if (yOffset > prevScrollHeight + sceneInfo[currentScene].scrollHeight) {
+    // 애니메이션 감속 처리때문에 기존의 yOffset으로 판별하면 어색해질 수 있음
+    // 그걸 방지하기 위해 yOffset > delayedYOffset으로 변경 기존 다른 애니메이션은 상돤이 없음
+    if (
+      delayedYOffset >
+      prevScrollHeight + sceneInfo[currentScene].scrollHeight
+    ) {
       enterNewScene = true;
       currentScene++;
       document.body.setAttribute('id', `show-scene-${currentScene}`);
     }
 
-    if (yOffset < prevScrollHeight) {
+    if (delayedYOffset < prevScrollHeight) {
       enterNewScene = true;
       if (currentScene === 0) return; //브라우져가 바운스효과가 일어나면 yOffset이 마이너스가 될 수 있음 그걸 방지
       currentScene--;
@@ -692,11 +704,49 @@
     playAnimation();
   }
 
+  function loop() {
+    // 속도 감속처리 식
+    delayedYOffset = delayedYOffset + (yOffset - delayedYOffset) * acc;
+
+    if (!enterNewScene) {
+      // 씬이 바뀔 때 계산 오차를 방지하기 위해 enterNewScene가 아닐 때 수행
+
+      if (currentScene === 0 || currentScene === 2) {
+        const currentYOffset = delayedYOffset - prevScrollHeight;
+        const objs = sceneInfo[currentScene].objs;
+        const values = sceneInfo[currentScene].values;
+        let sequence = Math.round(
+          calcValues(values.imageSequence, currentYOffset)
+        );
+
+        if (objs.videoImages[sequence]) {
+          // 해당 스크롤에 이미지가 존재할 때 그려주기
+          // 에러방지
+          objs.context.drawImage(objs.videoImages[sequence], 0, 0);
+        }
+      }
+    }
+
+    rafId = requestAnimationFrame(loop);
+
+    // 무한 호출을 멈추기 위한 과정
+    // abs는 스크롤을 위로할 때 대비
+    if (Math.abs(yOffset - delayedYOffset) < 1) {
+      cancelAnimationFrame(rafId);
+      rafState = false;
+    }
+  }
+
   window.addEventListener('scroll', () => {
     //console.log('scroll');
     yOffset = window.pageYOffset;
     scrollLoop();
     checkMenu();
+
+    if (!rafState) {
+      rafId = requestAnimationFrame(loop);
+      rafState = true;
+    }
   });
 
   window.addEventListener('load', () => {
