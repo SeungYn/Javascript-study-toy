@@ -156,8 +156,6 @@
     }
   }
 
-  setCanvasImages();
-
   function checkMenu() {
     // 문서 전체 스크롤 위치
     if (yOffset > 44) {
@@ -753,5 +751,22 @@
     setLayout();
     sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
   });
-  window.addEventListener('resize', setLayout);
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 600) {
+      //
+      setLayout();
+    }
+    // 사이즈가 바뀔 때 해당값을 변경해주지 않음
+    // 기존의 아래 값은 0일때 한번 세팅을 해줌 하지만 resize가 일어나면 값을 바꿔주기 떄문에 설정
+    sceneInfo[3].values.rectStartY = 0;
+  });
+
+  window.addEventListener('orientationchange', () => {
+    // 모바일에서 방향전환이 일어날 때 가로 세로
+
+    setLayout();
+  });
+
+  setCanvasImages();
 })();
