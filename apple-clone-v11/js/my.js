@@ -748,6 +748,7 @@
   });
 
   window.addEventListener('load', () => {
+    document.body.classList.remove('before-load');
     setLayout();
     sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
   });
@@ -766,6 +767,11 @@
     // 모바일에서 방향전환이 일어날 때 가로 세로
 
     setLayout();
+  });
+
+  document.querySelector('.loading').addEventListener('transitionend', (e) => {
+    // 트랜지션이 끝났을 때 이벤트
+    document.body.removeChild(e.currentTarget);
   });
 
   setCanvasImages();
