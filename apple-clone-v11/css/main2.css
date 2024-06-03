@@ -224,6 +224,30 @@ body#show-scene-3 #scroll-section-3 .sticky-elem {
   align-items: center;
 }
 
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  inset: 0 0 0 0;
+  z-index: 100;
+  background-color: white;
+  opacity: 1;
+  transition: 0.5;
+}
+
+.loading-circle {
+  white: 54px;
+  height: 54px;
+}
+
+.loading-circle circle {
+  stroke: black;
+  /* 박스 크기마다 달라짐 */
+  stroke-width: 4;
+  fill: transparent;
+}
+
 @media (min-width: 1024px) {
   #scroll-section-0 h1 {
     font-size: 9vw;
