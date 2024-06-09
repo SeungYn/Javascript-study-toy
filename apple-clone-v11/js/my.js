@@ -760,18 +760,17 @@
 
     window.addEventListener('resize', () => {
       if (window.innerWidth > 600) {
-        //
+        // 사이즈가 바뀔 때 해당값을 변경해주지 않음
+        // 기존의 아래 값은 0일때 한번 세팅을 해줌 하지만 resize가 일어나면 값을 바꿔주기 떄문에 설정
         setLayout();
+        sceneInfo[3].values.rectStartY = 0;
       }
-      // 사이즈가 바뀔 때 해당값을 변경해주지 않음
-      // 기존의 아래 값은 0일때 한번 세팅을 해줌 하지만 resize가 일어나면 값을 바꿔주기 떄문에 설정
-      sceneInfo[3].values.rectStartY = 0;
     });
 
     window.addEventListener('orientationchange', () => {
       // 모바일에서 방향전환이 일어날 때 가로 세로
 
-      setLayout();
+      setTimeout(setLayout(), 500);
     });
 
     document

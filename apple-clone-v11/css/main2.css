@@ -23,6 +23,11 @@ p {
   line-height: 1.6;
 }
 
+.container {
+  /* 아이폰 가로 스크롤 방지 */
+  overflow: hidden;
+}
+
 .global-nav {
   height: 44px;
   padding: 0 1rem;
@@ -48,6 +53,8 @@ p {
   position: fixed;
   top: 0;
   background-color: rgba(255, 255, 255, 0.1);
+  /* ios에서는 벤더 프리픽스 필요 */
+  -webkit-backdrop-filter: saturate(180%) blur(15px);
   backdrop-filter: saturate(180%) blur(15px);
 }
 
