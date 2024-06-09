@@ -741,11 +741,28 @@
   }
 
   window.addEventListener('load', () => {
+    //
+    //debugger;
     document.body.classList.remove('before-load');
     setLayout();
     sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
 
-    // 로그이후 애니메이션이 일어나도록 수정
+    let tempYOffset = yOffset;
+    let tempScrollCount = 0;
+
+    if (yOffset > 10) {
+      let siId = setInterval(() => {
+        window.scrollTo(0, tempYOffset);
+        tempYOffset += 2;
+        tempScrollCount++;
+
+        if (tempScrollCount > 10) {
+          clearInterval(siId);
+        }
+      }, 20);
+    }
+
+    // 로드 이후 애니메이션이 일어나도록 수정
     window.addEventListener('scroll', () => {
       //console.log('scroll');
       yOffset = window.pageYOffset;

@@ -283,6 +283,10 @@ body#show-scene-3 #scroll-section-3 .sticky-elem {
   animation: loading-circle-ani 1s infinite;
 }
 
+.before-load .container {
+  display: none;
+}
+
 .before-load .loading {
   opacity: 1;
 }
