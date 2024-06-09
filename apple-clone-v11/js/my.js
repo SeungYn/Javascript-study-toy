@@ -127,6 +127,7 @@
         canvas_scale: [0, 0, { start: 0, end: 0 }],
         canvasCaption_opacity: [0, 1, { start: 0, end: 0 }],
         canvasCaption_translateY: [20, 0, { start: 0, end: 0 }],
+        // 박스 애니메이션이 시작되는 y위치
         rectStartY: 0,
       },
     },
@@ -474,12 +475,14 @@
             // 캔버스보다 브라우저 창이 납작한 경우
             canvasScalRatio = widthRatio;
           }
-
+          //console.log('전 캔버스 크기', objs.canvas.width, objs.canvas.height);
           objs.canvas.style.transform = `scale(${canvasScalRatio})`;
+          //console.log('후 캔버스 크기', objs.canvas.width, objs.canvas.height);
           objs.context.fillStyle = 'white';
           objs.context.drawImage(objs.images[0], 0, 0);
 
           // 캔버스 사이즈에 맞춰 가정한 innerWidth와 innerHeight
+          // 초기의 캔버스 사이즈를 가져옴 식
           const recalculatedInnerWidth =
             document.body.offsetWidth / canvasScalRatio; // innerWidth는 스크롤바 크기까지 포함시킴 window.innerWidth / canvasScalRatio;
           const recalculatedInnerHeight = window.innerHeight / canvasScalRatio;
@@ -534,7 +537,7 @@
         const recalculatedInnerHeight = window.innerHeight / canvasScalRatio;
 
         if (!values.rectStartY) {
-          // 스크롤 이벤트가 발생한나 순간 값을 가져옴, 속도에 따라 값이 변함
+          // 스크롤 이벤트가 발생한나 순간 값을 가져옴, 속도에 따라 값이 변함 (아래 코드는)
           //values.rectStartY = objs.canvas.getBoundingClientRect().top;
           // 위의 문제를 해결하기 위해 offSetTop를 사용
           // 왼쪽 값에 빨간거 높이에서 연두색 높이를 빼고 나누기 2를 해주면됨
@@ -549,6 +552,7 @@
           );
           values.rect1X[2].start = window.innerHeight / 2 / scrollHeight;
           values.rect2X[2].start = window.innerHeight / 2 / scrollHeight;
+          // 해당 캔버스가 맨위로 가는 시점을 비율료 나타낸것
           values.rect1X[2].end = values.rectStartY / scrollHeight;
           values.rect2X[2].end = values.rectStartY / scrollHeight;
         }
@@ -588,7 +592,7 @@
           parseInt(whiteRectWidth),
           recalculatedInnerHeight
         );
-
+        console.log(values.rect1X);
         if (scrollRatio < values.rect1X[2].end) {
           // 캔버스가 브라우저 상단에 닿지 않았을 때
           step = 1;
@@ -605,7 +609,7 @@
           values.blendHeight[2].end = values.blendHeight[2].start + 0.2; // 스크롤 끝나는 기간을 정함
 
           const blendHeight = calcValues(values.blendHeight, currentYOffset);
-          //console.log(values.blendHeight, blendHeight);
+          console.log(values.blendHeight, blendHeight);
           objs.context.drawImage(
             objs.images[1],
             0,
@@ -646,6 +650,7 @@
             // 블랜드 이미지가 fixed일 때 스크롤 된 길이 만큼 마진으로 해줘야함
             // fixed를 풀어주면 그만큼 위로 위치가 올라가기 때문
             // 근데 0.4배를 해주면됨 블랜드 이미지가 스크롤 이벤트가 실행된 기간은 0.4, 40퍼센트이기 때문
+            // 블랜드 이미지의 스크롤의 기간을 곱해주면 됨 0.2 + 0.2해서 0.4
             objs.canvas.classList.remove('sticky');
             objs.canvas.style.marginTop = `${scrollHeight * 0.4}px`;
 
@@ -735,43 +740,46 @@
     }
   }
 
-  window.addEventListener('scroll', () => {
-    //console.log('scroll');
-    yOffset = window.pageYOffset;
-    scrollLoop();
-    checkMenu();
-
-    if (!rafState) {
-      rafId = requestAnimationFrame(loop);
-      rafState = true;
-    }
-  });
-
   window.addEventListener('load', () => {
     document.body.classList.remove('before-load');
     setLayout();
     sceneInfo[0].objs.context.drawImage(sceneInfo[0].objs.videoImages[0], 0, 0);
-  });
 
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 600) {
-      //
+    // 로그이후 애니메이션이 일어나도록 수정
+    window.addEventListener('scroll', () => {
+      //console.log('scroll');
+      yOffset = window.pageYOffset;
+      scrollLoop();
+      checkMenu();
+
+      if (!rafState) {
+        rafId = requestAnimationFrame(loop);
+        rafState = true;
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 600) {
+        //
+        setLayout();
+      }
+      // 사이즈가 바뀔 때 해당값을 변경해주지 않음
+      // 기존의 아래 값은 0일때 한번 세팅을 해줌 하지만 resize가 일어나면 값을 바꿔주기 떄문에 설정
+      sceneInfo[3].values.rectStartY = 0;
+    });
+
+    window.addEventListener('orientationchange', () => {
+      // 모바일에서 방향전환이 일어날 때 가로 세로
+
       setLayout();
-    }
-    // 사이즈가 바뀔 때 해당값을 변경해주지 않음
-    // 기존의 아래 값은 0일때 한번 세팅을 해줌 하지만 resize가 일어나면 값을 바꿔주기 떄문에 설정
-    sceneInfo[3].values.rectStartY = 0;
-  });
+    });
 
-  window.addEventListener('orientationchange', () => {
-    // 모바일에서 방향전환이 일어날 때 가로 세로
-
-    setLayout();
-  });
-
-  document.querySelector('.loading').addEventListener('transitionend', (e) => {
-    // 트랜지션이 끝났을 때 이벤트
-    document.body.removeChild(e.currentTarget);
+    document
+      .querySelector('.loading')
+      .addEventListener('transitionend', (e) => {
+        // 트랜지션이 끝났을 때 이벤트
+        document.body.removeChild(e.currentTarget);
+      });
   });
 
   setCanvasImages();
